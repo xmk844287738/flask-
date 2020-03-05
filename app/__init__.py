@@ -1,35 +1,36 @@
+
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+
 from config import Config
-# CORS跨域访问包
-from flask_cors import CORS
 
-
-
-
-# Flask-SQLAlchemy plugin
+# 调用 flask_sqlalchemy 插件
 db = SQLAlchemy()
-# # Flask-Migrate plugin
+# flask_Migrate 插件
 migrate = Migrate()
 
-def create_app(config_class=Config):
+
+def create_app(config_class = Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.url_map.strict_slashes = False
 
-# 跨域请求,开启CORS
+    # 开启 CORS 跨域访问
     CORS(app)
 
-    # Init Flask-SQLAlchemy
+    # 初始化 flask_sqlalchemy
     db.init_app(app)
-    # Init Flask-Migrate
+    # 初始化 flask_Migrate
     migrate.init_app(app, db)
 
-#导入数据库模型
-    from app import models
 
     # 注册 blueprint
-    from app.api import bp as api_bp
-    app.register_blueprint(api_bp, url_prefix='/api')
-# 返回对象集
+    from app.api import bp as api_bi
+    app.register_blueprint(api_bi, url_prefix='/api')
+
     return app
+
+
+from app import models
